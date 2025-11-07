@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Script to create a custom WordPress theme skeleton
 
 # Change this to your theme folder name
