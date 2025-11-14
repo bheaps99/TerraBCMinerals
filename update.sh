@@ -1,71 +1,58 @@
-#!/bin/sh
-# Script to create a custom WordPress theme skeleton
+#!/bin/bash
+# === Script: Create Astra Child Theme Skeleton ===
 
-# Change this to your theme folder name
-THEME_DIR="wp-content/themes/my_custom_theme"
+# --- Configuration ---
+CHILD_THEME_DIR="wp-content/themes/my-astra-child"
+PRODUCT_SNIPPET="recommended-products.php"
 
-echo "Creating theme folder at $THEME_DIR..."
-mkdir -p "$THEME_DIR"
+echo "=== Creating Astra Child Theme ==="
 
-# style.css
-cat <<EOL > $THEME_DIR/style.css
+# --- Create child theme folder ---
+mkdir -p "$CHILD_THEME_DIR"
+
+# --- Create style.css ---
+cat > "$CHILD_THEME_DIR/style.css" <<EOL
 /*
-Theme Name: My Custom Theme
-Theme URI: https://example.com
+Theme Name: My Astra Child
+Template: astra
 Author: Your Name
-Author URI: https://example.com
-Description: Custom WordPress theme for 3-product homepage
 Version: 1.0
-License: GNU General Public License v2 or later
-Text Domain: my-custom-theme
+Description: Child theme for Astra with custom 3-product homepage display
 */
 EOL
 
-# functions.php
-cat <<EOL > $THEME_DIR/functions.php
+# --- Create functions.php ---
+cat > "$CHILD_THEME_DIR/functions.php" <<'EOL'
 <?php
-// Enqueue WordPress styles and scripts
-function my_custom_theme_scripts() {
-    wp_enqueue_style('my-custom-theme-style', get_stylesheet_uri());
+// Enqueue parent and child styles
+add_action( 'wp_enqueue_scripts', 'my_astra_child_enqueue' );
+function my_astra_child_enqueue() {
+    wp_enqueue_style( 'astra-parent-style', get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style( 'astra-child-style', get_stylesheet_uri(), array('astra-parent-style') );
 }
-add_action('wp_enqueue_scripts', 'my_custom_theme_scripts');
+?>
 EOL
 
-# index.php
-cat <<EOL > $THEME_DIR/index.php
-<?php get_header(); ?>
-
-<div class="site-content">
-    <h1>Welcome to My Custom E-Commerce Site</h1>
-    <p>This is your homepage. We'll add your 3-product display next.</p>
+# --- Optional: Create recommended products snippet ---
+cat > "$CHILD_THEME_DIR/$PRODUCT_SNIPPET" <<'EOL'
+<?php
+// Example: 3 recommended products (placeholder)
+$recommended_products = [
+    ['name'=>'Product 1','price'=>'$49.99','image'=>'https://via.placeholder.com/150'],
+    ['name'=>'Product 2','price'=>'$59.99','image'=>'https://via.placeholder.com/150'],
+    ['name'=>'Product 3','price'=>'$69.99','image'=>'https://via.placeholder.com/150']
+];
+?>
+<div class="recommended-products">
+<?php foreach ($recommended_products as $product): ?>
+    <div class="product">
+        <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+        <h3><?php echo $product['name']; ?></h3>
+        <p><?php echo $product['price']; ?></p>
+    </div>
+<?php endforeach; ?>
 </div>
-
-<?php get_footer(); ?>
 EOL
 
-# header.php
-cat <<EOL > $THEME_DIR/header.php
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-<meta charset="<?php bloginfo('charset'); ?>">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<?php wp_head(); ?>
-</head>
-<body <?php body_class(); ?>>
-<header>
-    <h1><?php bloginfo('name'); ?></h1>
-</header>
-EOL
-
-# footer.php
-cat <<EOL > $THEME_DIR/footer.php
-<footer>
-    <p>&copy; <?php echo date("Y"); ?> <?php bloginfo('name'); ?></p>
-</footer>
-<?php wp_footer(); ?>
-</body>
-</html>
-EOL
-
-echo "✅ Theme skeleton created successfully in $THEME_DIR"
+echo "✅ Astra child theme created at $CHILD_THEME_DIR"
+echo "You can now activate it in WordPress admin and include $PRODUCT_SNIPPET in your homepage template."
