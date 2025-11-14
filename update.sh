@@ -6,7 +6,7 @@
 # Run this from inside your GitHub repo folder
 # Usage: sh create_astra_child.sh
 
-CHILD_THEME_DIR="my-astra-child"
+CHILD_THEME_DIR="wp-content/themes/my-astra-child"
 
 echo "---------------------------------------------"
 echo "Creating Astra child theme in $CHILD_THEME_DIR"
